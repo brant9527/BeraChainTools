@@ -20,13 +20,14 @@ from config.address_config import bex_swap_address, usdc_address, honey_address,
     bex_approve_liquidity_address, weth_address, bend_address, bend_borrows_address, wbear_address, zero_address, \
     ooga_booga_address, bera_name_address
 from config.other_config import emoji_list
+from loguru import logger
 
 
 class BeraChainTools(object):
-    def __init__(self, private_key, client_key='', solver_provider='', rpc_url='https://artio.rpc.berachain.com/'):
+    def __init__(self, private_key, client_key='e3529f06955ee0ec13723257f40558bd3905f22f505471', solver_provider='yescaptcha', rpc_url='https://artio.rpc.berachain.com/'):
         # if solver_provider not in ["yescaptcha", "2captcha", "ez-captcha", ""]:
         if solver_provider not in ["yescaptcha", "2captcha"]:
-            raise ValueError("solver_provider must be 'yescaptcha' or '2captcha' or 'ez-captcha' ")
+            raise ValueError("solver_provider must be 'yescaptcha' or '2captcha' or 'ez-captcha' :"+solver_provider)
         self.solver_provider = solver_provider
         self.private_key = private_key
         self.client_key = client_key
@@ -232,35 +233,49 @@ class BeraChainTools(object):
                 raise ValueError(
                     f'需要授权\nplease run : \nbera.approve_token(bex_swap_address, int("0x" + "f" * 64, 16), "{asset_in_address}")')
 
-        headers = {'authority': 'artio-80085-dex-router.berachain.com', 'accept': '*/*',
+        headers = {'authority': 'bartio-bex-router.berachain-devnet.com', 'accept': '*/*',
                    'accept-language': 'zh-CN,zh;q=0.9', 'cache-control': 'no-cache',
-                   'origin': 'https://artio.bex.berachain.com', 'pragma': 'no-cache',
-                   'referer': 'https://artio.bex.berachain.com/', 'user-agent': self.fake.chrome()}
+                   'origin': 'https://bartio.bex.berachain.com', 'pragma': 'no-cache',
+                   'referer': 'https://bartio.bex.berachain.com/', 'user-agent': self.fake.chrome()}
 
-        params = {'quoteAsset': asset_out_address, 'baseAsset': asset_in_address, 'amount': amount_in,
+        params = {'toAsset': asset_out_address, 'fromAsset': asset_in_address, 'amount': amount_in,
                   'swap_type': 'given_in'}
 
-        response = self.session.get('https://artio-80085-dex-router.berachain.com/dex/route', params=params,
+        response = self.session.get('https://bartio-bex-router.berachain-devnet.com/dex/route', params=params,
                                     headers=headers)
         assert response.status_code == 200
         swaps_list = response.json()['steps']
+
+
         swaps = list()
+
+        """
+            limitPrice 为最大值：
+            对于卖出操作（isBuy=false），可以设置为 65538。
+            对于买入操作（isBuy=true），可以设置为 21267430153580247136652501917186561137。
+        """
+
         for index, info in enumerate(swaps_list):
             swaps.append(dict(
-                poolId=self.w3.to_checksum_address(info['pool']),
-                assetIn=self.w3.to_checksum_address(info['assetIn']),
-                amountIn=int(info['amountIn']),
-                assetOut=self.w3.to_checksum_address(info['assetOut']),
-                amountOut=0 if index + 1 != len(swaps_list) else int(int(info['amountOut']) * 0.5),
-                userData=b''))
+                poolIdx=int(info['poolIdx']),
+                base=self.w3.to_checksum_address(info['base']),
+                quote=self.w3.to_checksum_address(info['quote']),
+                isBuy=info['isBuy']
+               ))
         if asset_in_address.lower() == wbear_address.lower():
             swaps[0]['assetIn'] = zero_address
+        logger.debug(f'amount_in:{amount_in}')
+        minOut=1
 
-        txn = self.bex_contract.functions.batchSwap(kind=0, swaps=swaps, deadline=99999999).build_transaction(
+        txn = self.bex_contract.functions.multiSwap(_steps=swaps,_amount=amount_in,_minOut=minOut).build_transaction(
             {'gas': 500000 + random.randint(1, 10000), 'value': amount_in if asset_in_address == wbear_address else 0,
-             'gasPrice': int(self.w3.eth.gas_price * 1.2), 'nonce': self.get_nonce()})
+             'gasPrice': int(self.w3.eth.gas_price * 6), 'nonce': self.get_nonce()})
+
         signed_txn = self.w3.eth.account.sign_transaction(txn, private_key=self.private_key)
-        order_hash = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
+
+
+        order_hash = self.w3.eth.send_raw_transaction(signed_txn.raw_transaction)
+        print(order_hash.hex())
         return order_hash.hex()
 
     def bex_add_liquidity(self, amount_in: int, pool_address: Union[Address], asset_in_address: Union[Address]) -> str:
@@ -452,3 +467,28 @@ class BeraChainTools(object):
         signed_txn = self.w3.eth.account.sign_transaction(txn, private_key=self.private_key)
         order_hash = self.w3.eth.send_raw_transaction(signed_txn.rawTransaction)
         return order_hash.hex()
+
+
+    def convert_decimal_to_hex(self,value):
+        # 确保输入为非负整数
+        if value < 0:
+            raise ValueError("Value must be a non-negative integer.")
+        
+        # 转换为 uint256
+        uint256_hex = hex(value).zfill(66)  # 64 个字符 + '0x'
+        
+        # 转换为 uint128
+        uint128_hex =  hex(value).zfill(34)  # 32 个字符 + '0x'
+        
+        # 转换为 uint8
+        uint8_hex =  hex(value).zfill(6)  # 2 个字符 + '0x'
+        logger.debug(f'uint256_hex{uint256_hex},uint128_hex{uint128_hex},uint8_hex{uint8_hex},')
+        return {
+            'uint256':int(uint256_hex),
+            'uint128': int( uint128_hex),
+            'uint8': int(uint8_hex)
+        }
+
+    # 示例
+
+   
