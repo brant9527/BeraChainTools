@@ -16,7 +16,7 @@ logger.debug(wbear_address)
 print(wbear_address,stg_usdc_address)  # 输出校验和地址
 
 result = bera.bex_swap(int(bera_balance * 0.1), wbear_address, stg_usdc_address)
-logger.debug('交易hex：'+result)
+logger.debug('交易量：'+result)
 # bex 使用usdc交换weth
 usdc_balance = bera.usdc_contract.functions.balanceOf(account.address).call()
 result = bera.bex_swap(int(usdc_balance * 0.2), usdc_address, weth_address)

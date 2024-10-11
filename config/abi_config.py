@@ -3,346 +3,154 @@
 # Author   :ym
 # File     :abi_config.py
 bex_abi = [
-  {
-    "type": "constructor",
-    "inputs": [
-      {
-        "name": "initialWbera",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "receive",
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "acceptCrocDex",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "pure"
-  },
-  {
-    "type": "function",
-    "name": "protocolCmd",
-    "inputs": [
-      {
-        "name": "callpath",
-        "type": "uint16",
-        "internalType": "uint16"
-      },
-      {
-        "name": "cmd",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "sudo",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "readSlot",
-    "inputs": [
-      {
-        "name": "slot",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "data",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "swap",
-    "inputs": [
-      {
-        "name": "base",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "quote",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "poolIdx",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "isBuy",
-        "type": "bool",
-        "internalType": "bool"
-      },
-      {
-        "name": "inBaseQty",
-        "type": "bool",
-        "internalType": "bool"
-      },
-      {
-        "name": "qty",
-        "type": "int",
-        "internalType": "int"
-      },
-      {
-        "name": "tip",
-        "type": "int",
-        "internalType": "int"
-      },
-      {
-        "name": "limitPrice",
-        "type": "int",
-        "internalType": "int"
-      },
-      {
-        "name": "minOut",
-        "type": "int",
-        "internalType": "int"
-      },
-      {
-        "name": "reserveFlags",
-        "type": "int",
-        "internalType": "int"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "baseFlow",
-        "type": "int128",
-        "internalType": "int128"
-      },
-      {
-        "name": "quoteFlow",
-        "type": "int128",
-        "internalType": "int128"
-      }
-    ],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "userCmd",
-    "inputs": [
-      {
-        "name": "callpath",
-        "type": "uint16",
-        "internalType": "uint16"
-      },
-      {
-        "name": "cmd",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "userCmdRelayer",
-    "inputs": [
-      {
-        "name": "callpath",
-        "type": "uint16",
-        "internalType": "uint16"
-      },
-      {
-        "name": "cmd",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "conds",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "relayerTip",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "signature",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "output",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "userCmdRouter",
-    "inputs": [
-      {
-        "name": "callpath",
-        "type": "uint16",
-        "internalType": "uint16"
-      },
-      {
-        "name": "cmd",
-        "type": "bytes",
-        "internalType": "bytes"
-      },
-      {
-        "name": "client",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "wbera",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "event",
-    "name": "CrocKnockoutCross",
-    "inputs": [
-      {
-        "name": "pool",
-        "type": "bytes32",
-        "indexed": True,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "tick",
-        "type": "int24",
-        "indexed": True,
-        "internalType": "int24"
-      },
-      {
-        "name": "isBid",
-        "type": "bool",
-        "indexed": False,
-        "internalType": "bool"
-      },
-      {
-        "name": "pivotTime",
-        "type": "uint32",
-        "indexed": False,
-        "internalType": "uint32"
-      },
-      {
-        "name": "feeMileage",
-        "type": "uint64",
-        "indexed": False,
-        "internalType": "uint64"
-      },
-      {
-        "name": "commitEntropy",
-        "type": "uint160",
-        "indexed": False,
-        "internalType": "uint160"
-      }
-    ],
-    "anonymous": False
-  },
-  {
-    "inputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "poolIdx",
-            "type": "int"
-          },
-          {
-            "internalType": "address",
-            "name": "base",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "quote",
-            "type": "address"
-          },
-          {
-            "internalType": "bool",
-            "name": "isBuy",
-            "type": "bool"
-          }
-        ],
-        "internalType": "struct MultiSwap.SwapStep[]",
-        "name": "_steps",
-        "type": "tuple[]"
-      },
-      {
-        "internalType": "uint128",
-        "name": "_amount",
-        "type": "int"
-      },
-      {
-        "internalType": "uint128",
-        "name": "_minOut",
-        "type": "int"
-      }
-    ],
-    "name": "multiSwap",
-    "outputs": [
-      {
-        "internalType": "uint128",
-        "name": "out",
-        "type": "uint128"
-      }
-    ],
-    "stateMutability": "payable",
-    "type": "function"
-  }
-
-]
+        {
+          "type": "constructor",
+          "inputs": [
+            {
+              "name": "_crocSwapDex",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "_crocImpact",
+              "type": "address",
+              "internalType": "address"
+            },
+            {
+              "name": "_crocQuery",
+              "type": "address",
+              "internalType": "address"
+            }
+          ],
+          "stateMutability": "nonpayable"
+        },
+        {
+          "type": "receive",
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "crocSwapDex",
+          "inputs": [],
+          "outputs": [
+            {
+              "name": "",
+              "type": "address",
+              "internalType": "contract CrocSwapDex"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "multiSwap",
+          "inputs": [
+            {
+              "name": "_steps",
+              "type": "tuple[]",
+              "internalType": "struct SwapHelpers.SwapStep[]",
+              "components": [
+                {
+                  "name": "poolIdx",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "base",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "quote",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "isBuy",
+                  "type": "bool",
+                  "internalType": "bool"
+                }
+              ]
+            },
+            {
+              "name": "_amount",
+              "type": "uint128",
+              "internalType": "uint128"
+            },
+            {
+              "name": "_minOut",
+              "type": "uint128",
+              "internalType": "uint128"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "out",
+              "type": "uint128",
+              "internalType": "uint128"
+            }
+          ],
+          "stateMutability": "payable"
+        },
+        {
+          "type": "function",
+          "name": "previewMultiSwap",
+          "inputs": [
+            {
+              "name": "_steps",
+              "type": "tuple[]",
+              "internalType": "struct SwapHelpers.SwapStep[]",
+              "components": [
+                {
+                  "name": "poolIdx",
+                  "type": "uint256",
+                  "internalType": "uint256"
+                },
+                {
+                  "name": "base",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "quote",
+                  "type": "address",
+                  "internalType": "address"
+                },
+                {
+                  "name": "isBuy",
+                  "type": "bool",
+                  "internalType": "bool"
+                }
+              ]
+            },
+            {
+              "name": "_amount",
+              "type": "uint128",
+              "internalType": "uint128"
+            }
+          ],
+          "outputs": [
+            {
+              "name": "out",
+              "type": "uint128",
+              "internalType": "uint128"
+            },
+            {
+              "name": "predictedQty",
+              "type": "uint256",
+              "internalType": "uint256"
+            }
+          ],
+          "stateMutability": "view"
+        },
+        {
+          "type": "function",
+          "name": "retire",
+          "inputs": [],
+          "outputs": [],
+          "stateMutability": "nonpayable"
+        }
+      ]
 erc_20_abi = [{"type": "event", "name": "Approval", "inputs": [{"indexed": True, "name": "owner", "type": "address"},
                                                                {"indexed": True, "name": "spender", "type": "address"},
                                                                {"indexed": False, "name": "value", "type": "uint256"}]},
